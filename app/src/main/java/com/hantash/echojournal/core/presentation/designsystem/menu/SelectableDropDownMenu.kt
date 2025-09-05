@@ -44,7 +44,7 @@ fun <T> SelectableDropDownMenu(
     dropDownOffset: IntOffset = IntOffset.Zero,
     dropDownExtras: SelectableOptionExtras? = null,
     maxDropDownHeight: Dp = Dp.Unspecified,
-    leadingIcon: (@Composable () -> Unit)? = null,
+    leadingIcon: (@Composable (T) -> Unit)? = null,
     onDismiss: () -> Unit,
     onItemClick: (Selectable<T>) -> Unit
 ) {
@@ -89,7 +89,7 @@ fun <T> SelectableDropDownMenu(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        leadingIcon?.invoke()
+                        leadingIcon?.invoke(selectable.item)
 
                         Text(
                             modifier = Modifier.weight(1f),

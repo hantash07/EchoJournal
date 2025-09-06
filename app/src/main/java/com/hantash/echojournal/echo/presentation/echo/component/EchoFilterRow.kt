@@ -47,7 +47,6 @@ fun EchoFilterRow(
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
 
-    var isExpanded by remember { mutableStateOf(false) }
     var dropDownOffset by remember { mutableStateOf(IntOffset.Zero) }
     val dropDownMaxHeight = (configuration.screenHeightDp * 0.3f).dp
 
@@ -67,7 +66,6 @@ fun EchoFilterRow(
             displayText = moodChipContent.title.asString(),
             onClick = {
                 onAction(EchoAction.OnMoodClipClick)
-                isExpanded = true
             },
             leadingContent = {
                 if (moodChipContent.iconsRes.isNotEmpty()) {
@@ -97,7 +95,6 @@ fun EchoFilterRow(
                     itemDisplayText = { moodUi -> moodUi.title.asString(context) },
                     onDismiss = {
                         onAction(EchoAction.OnDismissMoodDropDown)
-                        isExpanded = true
                     },
                     onItemClick = { moodUi ->
                         onAction(EchoAction.OnFilterByMoodClick(moodUi.item))
@@ -106,12 +103,11 @@ fun EchoFilterRow(
                     maxDropDownHeight = dropDownMaxHeight,
                     leadingIcon = { moodUi ->
                         Image(
-                            modifier = Modifier.padding(8.dp),
                             imageVector = ImageVector.vectorResource(moodUi.iconSet.fill),
                             contentDescription = moodUi.title.asString()
                         )
                     },
-                    key = { moodUi -> moodUi.title },
+                    key = { moodUi -> moodUi.title.asString(context) },
                 )
             }
         )
@@ -155,7 +151,6 @@ fun EchoFilterRow(
                         maxDropDownHeight = dropDownMaxHeight,
                         leadingIcon = { topic ->
                             Image(
-                                modifier = Modifier.padding(8.dp),
                                 imageVector = ImageVector.vectorResource(R.drawable.hashtag),
                                 contentDescription = topic
                             )

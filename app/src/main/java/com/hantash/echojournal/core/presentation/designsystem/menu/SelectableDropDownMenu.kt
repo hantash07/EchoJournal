@@ -36,11 +36,11 @@ import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable.Co
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
 
 @Composable
-fun <T> SelectableDropDownMenu(
+fun <T> SelectableDropDownMenu( //NOTE: Explore this generic function in detail.
     modifier: Modifier = Modifier,
     key: (T) -> Any,
     items: List<Selectable<T>>,
-    itemDisplayText: (T) -> String,
+    itemDisplayText: (T) -> String, //This is a lambda function because the type is generic. This is not needed if we only have one type of data. Same scenarios for key and leadingIcon.
     dropDownOffset: IntOffset = IntOffset.Zero,
     dropDownExtras: SelectableOptionExtras? = null,
     maxDropDownHeight: Dp = Dp.Unspecified,

@@ -28,7 +28,7 @@ fun EchoRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    EchoScreen(state = state, onAction = viewModel::onAction)
+    EchoScreen(state = state, onAction = viewModel::onAction) //NOTE: What does this mean viewModel::onAction
 }
 
 @Composable
@@ -61,7 +61,7 @@ fun EchoScreen(
                 modifier = Modifier.fillMaxWidth(),
                 moods = state.moods,
                 moodChipContent = state.moodChipContent,
-                hasActiveModeFilters = state.hasActiveModeFilters,
+                hasActiveMoodFilters = state.hasActiveMoodFilters,
                 topics = state.topics,
                 topicChipTitle = state.topicChipTitle,
                 hasActiveTopicFilters = state.hasActiveTopicFilters,

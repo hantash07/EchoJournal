@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.update
 class EchoViewModel: ViewModel() {
     private var hasLoadedInitialData = false
 
+    //NOTE: Difference b/w State and Event in detail.
     private val _state = MutableStateFlow(EchoState())
     val state = _state
         .onStart {
@@ -87,9 +88,6 @@ class EchoViewModel: ViewModel() {
                 selectedMoods + moodUi
             }
         }
-        _state.update { it.copy(
-            selectedEchoFilterChip = EchoFilterChip.MOODS
-        ) }
     }
 
     private fun toggleTopicFilter(topic: String) {
@@ -100,9 +98,6 @@ class EchoViewModel: ViewModel() {
                 selectedTopics + topic
             }
         }
-        _state.update { it.copy(
-            selectedEchoFilterChip = EchoFilterChip.TOPICS
-        ) }
     }
 
     private fun observeFilters() {
@@ -120,7 +115,7 @@ class EchoViewModel: ViewModel() {
                     )
                 },
                 moodChipContent = selectedMoods.asMoodChipContent(),
-                hasActiveModeFilters = selectedMoods.isNotEmpty(),
+                hasActiveMoodFilters = selectedMoods.isNotEmpty(),
                 moods = MoodUi.entries.map { mood ->
                     Selectable(
                         item = mood,

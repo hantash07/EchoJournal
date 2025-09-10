@@ -37,7 +37,7 @@ fun EchoFilterRow(
     modifier: Modifier = Modifier,
     moodChipContent: MoodChipContent,
     selectedEchoFilterChip: EchoFilterChip?,
-    hasActiveModeFilters: Boolean,
+    hasActiveMoodFilters: Boolean,
     moods: List<Selectable<MoodUi>>,
     topicChipTitle: UiText,
     hasActiveTopicFilters: Boolean,
@@ -50,7 +50,7 @@ fun EchoFilterRow(
     var dropDownOffset by remember { mutableStateOf(IntOffset.Zero) }
     val dropDownMaxHeight = (configuration.screenHeightDp * 0.3f).dp
 
-    FlowRow(
+    FlowRow( //NOTE: Difference b/w simple Row and FlowRow?
         modifier = modifier
             .padding(16.dp)
             .onGloballyPositioned {
@@ -83,9 +83,9 @@ fun EchoFilterRow(
                     }
                 }
             },
-            isClearVisible = hasActiveModeFilters,
+            isClearVisible = hasActiveMoodFilters,
             isDropDownVisible = selectedEchoFilterChip == EchoFilterChip.MOODS,
-            isHighlighted = hasActiveModeFilters || selectedEchoFilterChip == EchoFilterChip.MOODS,
+            isHighlighted = hasActiveMoodFilters || selectedEchoFilterChip == EchoFilterChip.MOODS,
             onClearButtonClick = {
                 onAction(EchoAction.OnRemoveFilters(EchoFilterChip.MOODS))
             },

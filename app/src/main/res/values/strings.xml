@@ -47,4 +47,7 @@
     <string name="clear_selections">Clear Selections</string>
     <string name="add_topic">Add Topic</string>
     <string name="create_entry">Create \'%s\'</string>
+    <string name="playing">Playing</string>
+    <string name="paused">Paused</string>
+    <string name="stopped">Stopped</string>
 </resources>

@@ -1,0 +1,107 @@
+package com.hantash.echojournal.echo.presentation.echo.component
+
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import com.hantash.echojournal.R
+import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
+
+@Composable
+fun EchoExpandableText(
+    modifier: Modifier = Modifier,
+    text: String,
+    collapsedMaxLine: Int = 3
+) {
+    var isExpanded by remember {
+        mutableStateOf(false)
+    }
+    var isClickable by remember {
+        mutableStateOf(false)
+    }
+    var lastCharIndex by remember {
+        mutableIntStateOf(0)
+    }
+    val primary = MaterialTheme.colorScheme.primary
+    val showMoreText = stringResource(R.string.show_more)
+    val textToShow = remember(text, isClickable, isExpanded) {
+        buildAnnotatedString {
+            when {
+                isClickable && !isExpanded -> {
+                    val adjustedText = text
+                        .substring(
+                            startIndex = 0,
+                            endIndex = lastCharIndex
+                        )
+                        .dropLast(showMoreText.length + 3)
+                        .dropLastWhile {
+                            Character.isWhitespace(it) || it == '.'
+                        }
+                    append(adjustedText)
+                    append("...")
+
+                    withStyle(
+                        style = SpanStyle(
+                            color = primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    ) {
+                        append(showMoreText)
+                    }
+                }
+                else -> {
+                    append(text)
+                }
+            }
+        }
+    }
+
+    Text(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(
+                enabled = isClickable,
+                interactionSource = null,
+                indication = null,
+            ) {
+                isExpanded = !isExpanded
+            }
+            .animateContentSize(),
+        text = textToShow,
+        onTextLayout = { result ->
+            if (!isExpanded && result.hasVisualOverflow) {
+                isClickable = true
+                lastCharIndex = result.getLineEnd(lineIndex = collapsedMaxLine - 1)
+            }
+        },
+        maxLines = if (isExpanded) Int.MAX_VALUE else collapsedMaxLine,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview() {
+    EchoJournalTheme {
+        EchoExpandableText(
+            text = buildString {
+                repeat(200) {
+                    append("Hello")
+                }
+            }
+        )
+    }
+}

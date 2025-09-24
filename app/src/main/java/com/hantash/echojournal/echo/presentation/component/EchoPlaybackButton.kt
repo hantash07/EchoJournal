@@ -16,7 +16,7 @@ import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalT
 import com.hantash.echojournal.core.presentation.designsystem.theme.Pause
 import com.hantash.echojournal.core.presentation.util.defaultShadow
 import com.hantash.echojournal.echo.presentation.model.MoodUi
-import com.hantash.echojournal.echo.presentation.model.PlaybackState
+import com.hantash.echojournal.echo.presentation.echo.model.PlaybackState
 
 @Composable
 fun EchoPlaybackButton(

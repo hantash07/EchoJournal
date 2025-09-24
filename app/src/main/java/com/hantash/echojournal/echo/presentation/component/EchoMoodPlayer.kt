@@ -24,7 +24,8 @@ import com.hantash.echojournal.core.presentation.designsystem.theme.MoodPrimary3
 import com.hantash.echojournal.core.presentation.designsystem.theme.MoodPrimary80
 import com.hantash.echojournal.core.presentation.util.formatMMSS
 import com.hantash.echojournal.echo.presentation.model.MoodUi
-import com.hantash.echojournal.echo.presentation.model.PlaybackState
+import com.hantash.echojournal.echo.presentation.echo.model.PlaybackState
+import com.hantash.echojournal.echo.presentation.echo.model.TrackSizeInfo
 import kotlin.random.Random
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -42,6 +43,7 @@ fun EchoMoodPlayer(
     playerProgress: () -> Float,
     onPlayClick: () -> Unit,
     onPauseClick: () -> Unit,
+    onTrackSizeAvailable: (TrackSizeInfo) -> Unit
 ) {
     val iconTint = when(moodUi) {
         null -> MoodPrimary80
@@ -127,7 +129,8 @@ private fun Preview() {
             powerRatios = ratios,
             playerProgress = { 0.3f },
             onPauseClick = {},
-            onPlayClick = {}
+            onPlayClick = {},
+            onTrackSizeAvailable = {}
         )
     }
 }

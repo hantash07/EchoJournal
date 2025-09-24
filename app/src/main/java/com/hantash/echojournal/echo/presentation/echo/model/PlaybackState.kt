@@ -1,4 +1,4 @@
-package com.hantash.echojournal.echo.presentation.model
+package com.hantash.echojournal.echo.presentation.echo.model
 
 enum class PlaybackState {
     PLAYING,

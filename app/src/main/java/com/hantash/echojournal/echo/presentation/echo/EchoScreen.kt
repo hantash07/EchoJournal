@@ -19,6 +19,7 @@ import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalT
 import com.hantash.echojournal.core.presentation.designsystem.theme.bgGradient
 import com.hantash.echojournal.echo.presentation.echo.component.EchoEmptyBackground
 import com.hantash.echojournal.echo.presentation.echo.component.EchoFilterRow
+import com.hantash.echojournal.echo.presentation.echo.component.EchoList
 import com.hantash.echojournal.echo.presentation.echo.component.EchoRecordFloatingActionButton
 import com.hantash.echojournal.echo.presentation.echo.component.EchoTopBar
 
@@ -81,6 +82,21 @@ fun EchoScreen(
 
                 !state.hasEchoRecorded -> {
                     EchoEmptyBackground()
+                }
+
+                else -> {
+                    EchoList(
+                        sections = state.echoDaySelections,
+                        onPlayClick = {
+                            onAction(EchoAction.OnPlayEchoClick(it))
+                        },
+                        onPauseClick = {
+                            onAction(EchoAction.OnPauseClick)
+                        },
+                        onTrackSizeAvailable = { trackSize ->
+                            onAction(EchoAction.OnTrackSizeAvailable(trackSize))
+                        }
+                    )
                 }
             }
         }

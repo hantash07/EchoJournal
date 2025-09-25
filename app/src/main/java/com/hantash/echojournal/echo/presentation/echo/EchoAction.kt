@@ -1,6 +1,7 @@
 package com.hantash.echojournal.echo.presentation.echo
 
 import com.hantash.echojournal.echo.presentation.echo.model.EchoFilterChip
+import com.hantash.echojournal.echo.presentation.echo.model.TrackSizeInfo
 import com.hantash.echojournal.echo.presentation.model.MoodUi
 
 sealed interface EchoAction {
@@ -14,4 +15,7 @@ sealed interface EchoAction {
     data object OnTopicChipClick: EchoAction
     data object OnDismissTopicDropDown: EchoAction
     data class OnFilterByTopicClick(val topic: String): EchoAction
+    data class OnPlayEchoClick(val echoId: Int): EchoAction
+    data object OnPauseClick: EchoAction
+    data class OnTrackSizeAvailable(val trackSizeInfo: TrackSizeInfo): EchoAction
 }

@@ -30,7 +30,7 @@ private val noVerticalLineBelowIconModifier = Modifier.height(8.dp)
 
 @Composable
 fun EchoTimelineItem(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     echoUi: EchoUi,
     relativePosition: RelativePosition,
     onPlayClick: () -> Unit,
@@ -69,6 +69,7 @@ fun EchoTimelineItem(
         Spacer(modifier = Modifier.width(12.dp))
 
         EchoCard(
+            modifier = Modifier.padding(vertical = 8.dp),
             echoUi = echoUi,
             onPlayClick = onPlayClick,
             onPauseClick = onPauseClick,

@@ -77,6 +77,10 @@ class EchoViewModel: ViewModel() {
                     EchoFilterChip.TOPICS -> selectedTopicFilters.update { emptyList() }
                 }
             }
+
+            EchoAction.OnPauseClick -> {}
+            is EchoAction.OnPlayEchoClick -> {}
+            is EchoAction.OnTrackSizeAvailable -> {}
         }
     }
 

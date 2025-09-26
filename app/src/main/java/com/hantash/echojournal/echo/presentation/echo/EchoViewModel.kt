@@ -5,21 +5,26 @@ import androidx.lifecycle.viewModelScope
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable
 import com.hantash.echojournal.core.presentation.util.UiText
+import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
 import com.hantash.echojournal.echo.presentation.echo.model.EchoFilterChip
 import com.hantash.echojournal.echo.presentation.echo.model.MoodChipContent
 import com.hantash.echojournal.echo.presentation.model.MoodUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class EchoViewModel: ViewModel() {
     private var hasLoadedInitialData = false
 
-    //NOTE: Difference b/w State and Event in detail.
+    //NOTE: Difference b/w State, Event and Action in detail.
     private val _state = MutableStateFlow(EchoState())
     val state = _state
         .onStart {
@@ -34,13 +39,25 @@ class EchoViewModel: ViewModel() {
             initialValue = EchoState()
         )
 
+    private val _eventChannel = Channel<EchoEvent>()
+    val events = _eventChannel.receiveAsFlow()
+
     private val selectedMoodFilters = MutableStateFlow<List<MoodUi>>(emptyList())
     private val selectedTopicFilters = MutableStateFlow<List<String>>(emptyList())
 
     fun onAction(action: EchoAction) {
         when (action) {
-            EchoAction.OnFabClick -> {}
-            EchoAction.OnFabLongClick -> {}
+            EchoAction.OnFabClick -> {
+                requestAudioPermission()
+                _state.update { it.copy(
+                    currentAudioCaptureMethod = AudioCaptureMethod.STANDARD
+                ) }
+            }
+            EchoAction.OnFabLongClick -> {
+                requestAudioPermission()
+                _state.update { it.copy(
+                    currentAudioCaptureMethod = AudioCaptureMethod.QUICK
+                ) }}
             EchoAction.OnSettingsClick -> {}
 
             EchoAction.OnMoodClipClick -> {
@@ -81,6 +98,10 @@ class EchoViewModel: ViewModel() {
             EchoAction.OnPauseClick -> {}
             is EchoAction.OnPlayEchoClick -> {}
             is EchoAction.OnTrackSizeAvailable -> {}
+
+            is EchoAction.OnAudioPermissionGranted -> {
+                Timber.d("Recording Started...")
+            }
         }
     }
 
@@ -175,4 +196,7 @@ class EchoViewModel: ViewModel() {
         }
     }
 
+    private fun requestAudioPermission() = viewModelScope.launch {
+        _eventChannel.send(EchoEvent.RequestAudioPermission)
+    }
 }

@@ -4,6 +4,7 @@ import com.hantash.echojournal.echo.presentation.echo.model.EchoFilterChip
 import com.hantash.echojournal.echo.presentation.echo.model.TrackSizeInfo
 import com.hantash.echojournal.echo.presentation.model.MoodUi
 
+// These are the actions initiated from UI into Viewmodel
 sealed interface EchoAction {
     data object OnFabClick: EchoAction
     data object OnFabLongClick: EchoAction
@@ -18,4 +19,5 @@ sealed interface EchoAction {
     data class OnPlayEchoClick(val echoId: Int): EchoAction
     data object OnPauseClick: EchoAction
     data class OnTrackSizeAvailable(val trackSizeInfo: TrackSizeInfo): EchoAction
+    data object OnAudioPermissionGranted: EchoAction
 }

@@ -1,5 +1,8 @@
 package com.hantash.echojournal.echo.presentation.echo
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,17 +20,36 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
 import com.hantash.echojournal.core.presentation.designsystem.theme.bgGradient
+import com.hantash.echojournal.core.presentation.util.ObserveAsEvents
 import com.hantash.echojournal.echo.presentation.echo.component.EchoEmptyBackground
 import com.hantash.echojournal.echo.presentation.echo.component.EchoFilterRow
 import com.hantash.echojournal.echo.presentation.echo.component.EchoList
 import com.hantash.echojournal.echo.presentation.echo.component.EchoRecordFloatingActionButton
 import com.hantash.echojournal.echo.presentation.echo.component.EchoTopBar
+import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
 
 @Composable
 fun EchoRoot(
     viewModel: EchoViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    // NOTE: Handle the other cases. Example user decline the permissions
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted && state.currentAudioCaptureMethod == AudioCaptureMethod.STANDARD) {
+            viewModel.onAction(EchoAction.OnAudioPermissionGranted)
+        }
+    }
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when(event) {
+            is EchoEvent.RequestAudioPermission -> {
+                permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+            }
+        }
+    }
 
     EchoScreen(state = state, onAction = viewModel::onAction) //NOTE: What does this mean viewModel::onAction
 }

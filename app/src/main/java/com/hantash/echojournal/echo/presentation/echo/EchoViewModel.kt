@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable
 import com.hantash.echojournal.core.presentation.util.UiText
+import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
 import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
 import com.hantash.echojournal.echo.presentation.echo.model.EchoFilterChip
 import com.hantash.echojournal.echo.presentation.echo.model.MoodChipContent
@@ -21,7 +22,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class EchoViewModel: ViewModel() {
+class EchoViewModel(
+    private val voiceRecorder: VoiceRecorder
+): ViewModel() {
     private var hasLoadedInitialData = false
 
     //NOTE: Difference b/w State, Event and Action in detail.

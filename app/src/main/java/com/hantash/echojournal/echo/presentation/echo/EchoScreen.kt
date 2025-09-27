@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
 import com.hantash.echojournal.core.presentation.designsystem.theme.bgGradient
 import com.hantash.echojournal.core.presentation.util.ObserveAsEvents
@@ -27,10 +26,11 @@ import com.hantash.echojournal.echo.presentation.echo.component.EchoList
 import com.hantash.echojournal.echo.presentation.echo.component.EchoRecordFloatingActionButton
 import com.hantash.echojournal.echo.presentation.echo.component.EchoTopBar
 import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun EchoRoot(
-    viewModel: EchoViewModel = viewModel()
+    viewModel: EchoViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 

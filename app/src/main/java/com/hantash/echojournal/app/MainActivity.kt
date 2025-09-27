@@ -1,4 +1,4 @@
-package com.hantash.echojournal
+package com.hantash.echojournal.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

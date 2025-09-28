@@ -1,5 +1,6 @@
 package com.hantash.echojournal.echo.presentation.echo
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hantash.echojournal.R
@@ -9,22 +10,32 @@ import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
 import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
 import com.hantash.echojournal.echo.presentation.echo.model.EchoFilterChip
 import com.hantash.echojournal.echo.presentation.echo.model.MoodChipContent
+import com.hantash.echojournal.echo.presentation.echo.model.RecordingState
 import com.hantash.echojournal.echo.presentation.model.MoodUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.time.Duration.Companion.seconds
 
 class EchoViewModel(
     private val voiceRecorder: VoiceRecorder
 ): ViewModel() {
+
+    companion object {
+        private val MIN_RECORD_DURATION = 1.5.seconds
+    }
+
     private var hasLoadedInitialData = false
 
     //NOTE: Difference b/w State, Event and Action in detail.
@@ -51,6 +62,7 @@ class EchoViewModel(
     fun onAction(action: EchoAction) {
         when (action) {
             EchoAction.OnFabClick -> {
+                Timber.d("OnFabClick")
                 requestAudioPermission()
                 _state.update { it.copy(
                     currentAudioCaptureMethod = AudioCaptureMethod.STANDARD
@@ -61,7 +73,10 @@ class EchoViewModel(
                 _state.update { it.copy(
                     currentAudioCaptureMethod = AudioCaptureMethod.QUICK
                 ) }}
-            EchoAction.OnSettingsClick -> {}
+
+            EchoAction.OnSettingsClick -> {
+                Timber.d("OnSettingsClick")
+            }
 
             EchoAction.OnMoodClipClick -> {
                 _state.update { it.copy(
@@ -98,13 +113,18 @@ class EchoViewModel(
                 }
             }
 
-            EchoAction.OnPauseClick -> {}
+            EchoAction.OnPauseAudioClick -> {}
             is EchoAction.OnPlayEchoClick -> {}
             is EchoAction.OnTrackSizeAvailable -> {}
 
             is EchoAction.OnAudioPermissionGranted -> {
-                Timber.d("Recording Started...")
+                startRecording(captureMethod = AudioCaptureMethod.STANDARD)
             }
+
+            EchoAction.OnCancelRecording -> cancelRecording()
+            EchoAction.OnPauseRecordingClick -> pauseRecording()
+            EchoAction.OnCompleteRecordingClick -> stopRecording()
+            EchoAction.OnResumeRecordingClick -> resumeRecording()
         }
     }
 
@@ -201,5 +221,66 @@ class EchoViewModel(
 
     private fun requestAudioPermission() = viewModelScope.launch {
         _eventChannel.send(EchoEvent.RequestAudioPermission)
+    }
+
+    private fun startRecording(captureMethod: AudioCaptureMethod) {
+        _state.update { it.copy(
+            recordingState = when(captureMethod) {
+                AudioCaptureMethod.STANDARD -> RecordingState.NORMAL_CAPTURE
+                AudioCaptureMethod.QUICK -> RecordingState.QUICK_CAPTURE
+            }
+        ) }
+        voiceRecorder.start()
+
+        if (captureMethod == AudioCaptureMethod.STANDARD) {
+            voiceRecorder
+                .recordingDetail
+                .distinctUntilChangedBy { it.duration }
+                .map { it.duration }
+                .onEach { duration ->
+                    _state.update { it.copy(
+                        recordingElapsedDuration = duration
+                    ) }
+                }
+                .launchIn(viewModelScope)
+        }
+    }
+
+    private fun pauseRecording() {
+        voiceRecorder.pause()
+        _state.update { it.copy(
+            recordingState = RecordingState.PAUSED
+        ) }
+    }
+
+    private fun resumeRecording() {
+        voiceRecorder.resume()
+        _state.update { it.copy(
+            recordingState = RecordingState.NORMAL_CAPTURE
+        ) }
+    }
+
+    private fun cancelRecording() {
+        voiceRecorder.cancel()
+        _state.update { it.copy(
+            recordingState = RecordingState.NOT_RECORDING,
+            currentAudioCaptureMethod = null
+        ) }
+    }
+
+    private fun stopRecording() {
+        voiceRecorder.stop()
+        _state.update { it.copy(
+            recordingState = RecordingState.NOT_RECORDING
+        ) }
+
+        val recordingDetail = voiceRecorder.recordingDetail.value
+        viewModelScope.launch {
+            if (recordingDetail.duration < MIN_RECORD_DURATION) {
+                _eventChannel.send(EchoEvent.RecordingTooShort)
+            } else {
+                _eventChannel.send(EchoEvent.OnDoneRecording)
+            }
+        }
     }
 }

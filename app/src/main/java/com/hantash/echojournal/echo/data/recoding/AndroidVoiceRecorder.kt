@@ -86,6 +86,8 @@ class AndroidVoiceRecorder(
             return
         }
 
+        isPaused = true
+        
         recorder?.pause()
         durationJob?.cancel()
         amplitudeJob?.cancel()

@@ -1,6 +1,8 @@
 package com.hantash.echojournal.echo.presentation.echo
 
 import android.Manifest
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -15,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
@@ -24,9 +27,13 @@ import com.hantash.echojournal.echo.presentation.echo.component.EchoEmptyBackgro
 import com.hantash.echojournal.echo.presentation.echo.component.EchoFilterRow
 import com.hantash.echojournal.echo.presentation.echo.component.EchoList
 import com.hantash.echojournal.echo.presentation.echo.component.EchoRecordFloatingActionButton
+import com.hantash.echojournal.echo.presentation.echo.component.EchoRecordingSheet
 import com.hantash.echojournal.echo.presentation.echo.component.EchoTopBar
 import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
+import com.hantash.echojournal.echo.presentation.echo.model.RecordingState
 import org.koin.androidx.compose.koinViewModel
+import com.hantash.echojournal.R
+import timber.log.Timber
 
 @Composable
 fun EchoRoot(
@@ -38,15 +45,31 @@ fun EchoRoot(
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
+        Timber.d("isGranted: $isGranted")
         if (isGranted && state.currentAudioCaptureMethod == AudioCaptureMethod.STANDARD) {
+            Timber.d("Audio Permissions is Granted")
             viewModel.onAction(EchoAction.OnAudioPermissionGranted)
         }
     }
 
+    Timber.d("EchoRoot")
+
+    val context = LocalContext.current
     ObserveAsEvents(viewModel.events) { event ->
         when(event) {
             is EchoEvent.RequestAudioPermission -> {
+                Timber.d("Requesting Audio Permissions")
                 permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+            }
+            is EchoEvent.RecordingTooShort -> {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.audio_recording_was_too_short),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is EchoEvent.OnDoneRecording -> {
+                Timber.d("Recording Successful!")
             }
         }
     }
@@ -68,7 +91,10 @@ fun EchoScreen(
             )
         },
         floatingActionButton = {
-            EchoRecordFloatingActionButton(onClick = {})
+            EchoRecordFloatingActionButton(onClick = {
+                Timber.d("OnFabClick")
+                onAction(EchoAction.OnFabClick)
+            })
         },
 
     ) { paddingValues ->
@@ -113,7 +139,7 @@ fun EchoScreen(
                             onAction(EchoAction.OnPlayEchoClick(it))
                         },
                         onPauseClick = {
-                            onAction(EchoAction.OnPauseClick)
+                            onAction(EchoAction.OnPauseAudioClick)
                         },
                         onTrackSizeAvailable = { trackSize ->
                             onAction(EchoAction.OnTrackSizeAvailable(trackSize))
@@ -121,6 +147,18 @@ fun EchoScreen(
                     )
                 }
             }
+        }
+
+        // Showing bottom sheet recording
+        if (state.recordingState in listOf(RecordingState.NORMAL_CAPTURE, RecordingState.PAUSED)) {
+            EchoRecordingSheet(
+                formattedRecordDuration = state.formattedRecordDuration,
+                isRecording = state.recordingState == RecordingState.NORMAL_CAPTURE,
+                onDismiss = { onAction(EchoAction.OnCancelRecording) },
+                onPauseClick = { onAction(EchoAction.OnPauseRecordingClick) },
+                onResumeClick = { onAction(EchoAction.OnResumeRecordingClick) },
+                onCompleteRecording = { onAction(EchoAction.OnCompleteRecordingClick) }
+            )
         }
     }
 }

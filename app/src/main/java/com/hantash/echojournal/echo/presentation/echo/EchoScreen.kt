@@ -36,10 +36,12 @@ import com.hantash.echojournal.echo.presentation.echo.model.RecordingState
 import org.koin.androidx.compose.koinViewModel
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.util.isAppInForeground
+import com.hantash.echojournal.echo.domain.recording.RecordingDetail
 import timber.log.Timber
 
 @Composable
 fun EchoRoot(
+    onNavToCreateEcho: (RecordingDetail) -> Unit,
     viewModel: EchoViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -70,6 +72,7 @@ fun EchoRoot(
             }
             is EchoEvent.OnDoneRecording -> {
                 Timber.d("Recording Successful!")
+                onNavToCreateEcho(event.recordingDetail)
             }
         }
     }
@@ -89,8 +92,6 @@ fun EchoScreen(
     state: EchoState,
     onAction: (EchoAction) -> Unit
 ) {
-    val context = LocalContext.current
-
     Scaffold(
         topBar = {
             EchoTopBar(
@@ -106,6 +107,7 @@ fun EchoScreen(
                     onAction(EchoAction.OnFabClick)
                 },
                 onLongPressStart = {
+                    //NOTE: There is a glitch when permission is not granted.
                     onAction(EchoAction.OnFabLongClick)
                 },
                 onLongPressEnd = { isCancelled ->

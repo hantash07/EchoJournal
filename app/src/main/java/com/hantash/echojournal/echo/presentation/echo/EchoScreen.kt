@@ -14,6 +14,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,6 +33,7 @@ import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
 import com.hantash.echojournal.echo.presentation.echo.model.RecordingState
 import org.koin.androidx.compose.koinViewModel
 import com.hantash.echojournal.R
+import com.hantash.echojournal.core.presentation.util.isAppInForeground
 import com.hantash.echojournal.echo.presentation.echo.component.SheetContent
 import timber.log.Timber
 
@@ -66,6 +68,13 @@ fun EchoRoot(
             is EchoEvent.OnDoneRecording -> {
                 Timber.d("Recording Successful!")
             }
+        }
+    }
+
+    val isAppInForeground by isAppInForeground()
+    LaunchedEffect(isAppInForeground, state.recordingState) {
+        if (!isAppInForeground && state.recordingState == RecordingState.NORMAL_CAPTURE) {
+            viewModel.onAction(EchoAction.OnPauseRecordingClick)
         }
     }
 

@@ -23,5 +23,5 @@ sealed interface EchoAction {
     data object OnCancelRecording: EchoAction
     data object OnPauseRecordingClick: EchoAction
     data object OnResumeRecordingClick: EchoAction
-    data object OnCompleteRecordingClick: EchoAction
+    data object OnCompleteRecording: EchoAction
 }

@@ -60,18 +60,30 @@ class EchoViewModel(
 
     fun onAction(action: EchoAction) {
         when (action) {
+
             EchoAction.OnFabClick -> {
                 Timber.d("OnFabClick")
-                requestAudioPermission()
                 _state.update { it.copy(
                     currentAudioCaptureMethod = AudioCaptureMethod.STANDARD
                 ) }
-            }
-            EchoAction.OnFabLongClick -> {
                 requestAudioPermission()
+            }
+
+            EchoAction.OnFabLongClick -> {
+                Timber.d("OnFabLongClick")
                 _state.update { it.copy(
                     currentAudioCaptureMethod = AudioCaptureMethod.QUICK
-                ) }}
+                ) }
+                requestAudioPermission()
+            }
+
+            is EchoAction.OnAudioPermissionGranted -> {
+                val audioCaptureMethod = _state.value.currentAudioCaptureMethod
+                audioCaptureMethod?.let {
+                    Timber.d("Selected Method: ${audioCaptureMethod.name}")
+                    startRecording(it)
+                }
+            }
 
             EchoAction.OnSettingsClick -> {
                 Timber.d("OnSettingsClick")
@@ -116,13 +128,9 @@ class EchoViewModel(
             is EchoAction.OnPlayEchoClick -> {}
             is EchoAction.OnTrackSizeAvailable -> {}
 
-            is EchoAction.OnAudioPermissionGranted -> {
-                startRecording(captureMethod = AudioCaptureMethod.STANDARD)
-            }
-
             EchoAction.OnCancelRecording -> cancelRecording()
             EchoAction.OnPauseRecordingClick -> pauseRecording()
-            EchoAction.OnCompleteRecordingClick -> stopRecording()
+            EchoAction.OnCompleteRecording -> stopRecording()
             EchoAction.OnResumeRecordingClick -> resumeRecording()
         }
     }

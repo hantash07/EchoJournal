@@ -21,13 +21,13 @@ data class EchoState(
     val hasActiveTopicFilters: Boolean = false,
     val hasActiveMoodFilters: Boolean = false,
     val isLoadingData: Boolean = false,
-    val recordingState: RecordingState = RecordingState.NOT_RECORDING,
     val moods: List<Selectable<MoodUi>> = emptyList(),
     val topics: List<Selectable<String>> = listOf("Love", "Happy", "Work").asUnselectedItems(),
     val moodChipContent: MoodChipContent = MoodChipContent(),
     val topicChipTitle: UiText = UiText.StringResource(R.string.add_topic),
     val selectedEchoFilterChip: EchoFilterChip? = null,
     val currentAudioCaptureMethod: AudioCaptureMethod? = null,
+    val recordingState: RecordingState = RecordingState.NOT_RECORDING,
     val recordingElapsedDuration: Duration = Duration.ZERO
 ) {
     val echoDaySelections = echos
@@ -40,7 +40,7 @@ data class EchoState(
         get() {
             val minutes = (recordingElapsedDuration.inWholeMinutes % 60).toInt()
             val seconds = (recordingElapsedDuration.inWholeSeconds % 60).toInt()
-            val milliseconds = ((recordingElapsedDuration.inWholeMicroseconds % 1000) / 10.0 ).roundToInt()
+            val milliseconds = ((recordingElapsedDuration.inWholeMilliseconds % 1000) / 10.0 ).roundToInt()
 
             return String.format(
                 locale = Locale.US,

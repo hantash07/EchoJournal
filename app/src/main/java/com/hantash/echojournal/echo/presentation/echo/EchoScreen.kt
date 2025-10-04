@@ -1,7 +1,6 @@
 package com.hantash.echojournal.echo.presentation.echo
 
 import android.Manifest
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,6 +32,7 @@ import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
 import com.hantash.echojournal.echo.presentation.echo.model.RecordingState
 import org.koin.androidx.compose.koinViewModel
 import com.hantash.echojournal.R
+import com.hantash.echojournal.echo.presentation.echo.component.SheetContent
 import timber.log.Timber
 
 @Composable
@@ -45,20 +45,15 @@ fun EchoRoot(
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        Timber.d("isGranted: $isGranted")
         if (isGranted && state.currentAudioCaptureMethod == AudioCaptureMethod.STANDARD) {
-            Timber.d("Audio Permissions is Granted")
             viewModel.onAction(EchoAction.OnAudioPermissionGranted)
         }
     }
-
-    Timber.d("EchoRoot")
 
     val context = LocalContext.current
     ObserveAsEvents(viewModel.events) { event ->
         when(event) {
             is EchoEvent.RequestAudioPermission -> {
-                Timber.d("Requesting Audio Permissions")
                 permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
             }
             is EchoEvent.RecordingTooShort -> {
@@ -92,7 +87,6 @@ fun EchoScreen(
         },
         floatingActionButton = {
             EchoRecordFloatingActionButton(onClick = {
-                Timber.d("OnFabClick")
                 onAction(EchoAction.OnFabClick)
             })
         },

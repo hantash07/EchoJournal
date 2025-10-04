@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -95,7 +96,7 @@ fun SheetContent(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(16.dp),
+            .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -114,8 +115,12 @@ fun SheetContent(
                 textAlign = TextAlign.Center
             )
             Text(
+                modifier = Modifier.defaultMinSize(minWidth = 100.dp),
                 text = formattedRecordDuration,
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFeatureSettings = "tnum",
+                    textAlign = TextAlign.Center
+                ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

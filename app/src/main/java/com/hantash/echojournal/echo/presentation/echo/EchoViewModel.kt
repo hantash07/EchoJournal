@@ -1,6 +1,5 @@
 package com.hantash.echojournal.echo.presentation.echo
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hantash.echojournal.R

@@ -4,8 +4,8 @@ import com.hantash.echojournal.app.navigation.NavigationRoute
 import com.hantash.echojournal.echo.domain.recording.RecordingDetail
 import kotlin.time.Duration.Companion.milliseconds
 
-fun RecordingDetail.toCreateEchoRoute(): NavigationRoute.CreateEcho {
-    return NavigationRoute.CreateEcho(
+fun RecordingDetail.toCreateEchoRoute(): NavigationRoute.CreateEchoScreen {
+    return NavigationRoute.CreateEchoScreen(
         recordingPath = this.filePath ?: throw IllegalArgumentException(
             "Recording path can't be null."
         ),
@@ -14,7 +14,7 @@ fun RecordingDetail.toCreateEchoRoute(): NavigationRoute.CreateEcho {
     )
 }
 
-fun NavigationRoute.CreateEcho.toRecordingDetails(): RecordingDetail {
+fun NavigationRoute.CreateEchoScreen.toRecordingDetails(): RecordingDetail {
     return RecordingDetail(
         duration = this.duration.milliseconds,
         amplitudes = this.amplitudes.split(";").map { it.toFloat() },

@@ -2,6 +2,7 @@ package com.hantash.echojournal.echo.di
 
 import com.hantash.echojournal.echo.data.recoding.AndroidVoiceRecorder
 import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
+import com.hantash.echojournal.echo.presentation.echo_create.EchoCreateViewModel
 import com.hantash.echojournal.echo.presentation.echo_list.EchoViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.viewModelOf
@@ -17,4 +18,5 @@ val echoModule = module {
     } bind VoiceRecorder::class
 
     viewModelOf(::EchoViewModel)
+    viewModelOf(::EchoCreateViewModel)
 }

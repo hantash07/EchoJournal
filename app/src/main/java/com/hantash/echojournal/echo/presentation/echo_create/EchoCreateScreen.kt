@@ -49,7 +49,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.button.PrimaryButton
 import com.hantash.echojournal.core.presentation.designsystem.button.SecondaryButton
@@ -58,11 +57,13 @@ import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalT
 import com.hantash.echojournal.core.presentation.designsystem.theme.secondary70
 import com.hantash.echojournal.core.presentation.designsystem.theme.secondary95
 import com.hantash.echojournal.echo.presentation.component.EchoMoodPlayer
+import com.hantash.echojournal.echo.presentation.echo_create.component.SelectMoodSheet
 import com.hantash.echojournal.echo.presentation.model.MoodUi
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun EchoCreateRoot(
-    viewModel: EchoCreateViewModel = viewModel()
+    viewModel: EchoCreateViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -260,6 +261,21 @@ fun EchoCreateScreen(
                     }
                 )
             }
+        }
+
+        if (state.showMoodSelector) {
+            SelectMoodSheet(
+                selectedMood = state.selectedMood,
+                onMoodClick = { mood ->
+                    onAction(EchoCreateAction.OnMoodClick(mood))
+                },
+                onConfirmClick = {
+                    onAction(EchoCreateAction.OnConfirmMood)
+                },
+                onDismiss = {
+                    onAction(EchoCreateAction.OnDismissMoodSelector)
+                }
+            )
         }
     }
 }

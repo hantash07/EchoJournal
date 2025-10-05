@@ -11,7 +11,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.hantash.echojournal.app.navigation.NavigationRoot
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
-import com.hantash.echojournal.echo.presentation.echo.EchoRoot
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

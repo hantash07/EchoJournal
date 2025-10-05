@@ -1,4 +1,4 @@
-package com.hantash.echojournal.echo.presentation.echo
+package com.hantash.echojournal.echo.presentation.echo_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,10 +6,10 @@ import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable
 import com.hantash.echojournal.core.presentation.util.UiText
 import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
-import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
-import com.hantash.echojournal.echo.presentation.echo.model.EchoFilterChip
-import com.hantash.echojournal.echo.presentation.echo.model.MoodChipContent
-import com.hantash.echojournal.echo.presentation.echo.model.RecordingState
+import com.hantash.echojournal.echo.presentation.echo_list.model.AudioCaptureMethod
+import com.hantash.echojournal.echo.presentation.echo_list.model.EchoFilterChip
+import com.hantash.echojournal.echo.presentation.echo_list.model.MoodChipContent
+import com.hantash.echojournal.echo.presentation.echo_list.model.RecordingState
 import com.hantash.echojournal.echo.presentation.model.MoodUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

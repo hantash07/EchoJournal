@@ -1,4 +1,4 @@
-package com.hantash.echojournal.echo.presentation.echo.component
+package com.hantash.echojournal.echo.presentation.echo_list.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings

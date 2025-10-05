@@ -1,4 +1,4 @@
-package com.hantash.echojournal.echo.presentation.echo.component
+package com.hantash.echojournal.echo.presentation.echo_list.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -26,9 +26,9 @@ import com.hantash.echojournal.core.presentation.designsystem.chip.MultiChoiceCh
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable
 import com.hantash.echojournal.core.presentation.designsystem.menu.SelectableDropDownMenu
 import com.hantash.echojournal.core.presentation.util.UiText
-import com.hantash.echojournal.echo.presentation.echo.EchoAction
-import com.hantash.echojournal.echo.presentation.echo.model.EchoFilterChip
-import com.hantash.echojournal.echo.presentation.echo.model.MoodChipContent
+import com.hantash.echojournal.echo.presentation.echo_list.EchoAction
+import com.hantash.echojournal.echo.presentation.echo_list.model.EchoFilterChip
+import com.hantash.echojournal.echo.presentation.echo_list.model.MoodChipContent
 import com.hantash.echojournal.echo.presentation.model.MoodUi
 
 @OptIn(ExperimentalLayoutApi::class)

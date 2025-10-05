@@ -1,6 +1,6 @@
 package com.hantash.echojournal.echo.presentation.model
 
-import com.hantash.echojournal.echo.presentation.echo.model.PlaybackState
+import com.hantash.echojournal.echo.presentation.echo_list.model.PlaybackState
 import com.hantash.echojournal.echo.presentation.util.toReadableTime
 import kotlin.time.Duration
 import java.time.Instant as JavaInstant

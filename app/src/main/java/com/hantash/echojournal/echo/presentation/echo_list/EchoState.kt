@@ -1,14 +1,14 @@
-package com.hantash.echojournal.echo.presentation.echo
+package com.hantash.echojournal.echo.presentation.echo_list
 
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable.Companion.asUnselectedItems
 import com.hantash.echojournal.core.presentation.util.UiText
-import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
-import com.hantash.echojournal.echo.presentation.echo.model.EchoDaySection
-import com.hantash.echojournal.echo.presentation.echo.model.EchoFilterChip
-import com.hantash.echojournal.echo.presentation.echo.model.MoodChipContent
-import com.hantash.echojournal.echo.presentation.echo.model.RecordingState
+import com.hantash.echojournal.echo.presentation.echo_list.model.AudioCaptureMethod
+import com.hantash.echojournal.echo.presentation.echo_list.model.EchoDaySection
+import com.hantash.echojournal.echo.presentation.echo_list.model.EchoFilterChip
+import com.hantash.echojournal.echo.presentation.echo_list.model.MoodChipContent
+import com.hantash.echojournal.echo.presentation.echo_list.model.RecordingState
 import com.hantash.echojournal.echo.presentation.model.EchoUi
 import com.hantash.echojournal.echo.presentation.model.MoodUi
 import java.util.Locale

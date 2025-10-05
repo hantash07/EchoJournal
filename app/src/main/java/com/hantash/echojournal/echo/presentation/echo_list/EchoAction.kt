@@ -1,7 +1,7 @@
-package com.hantash.echojournal.echo.presentation.echo
+package com.hantash.echojournal.echo.presentation.echo_list
 
-import com.hantash.echojournal.echo.presentation.echo.model.EchoFilterChip
-import com.hantash.echojournal.echo.presentation.echo.model.TrackSizeInfo
+import com.hantash.echojournal.echo.presentation.echo_list.model.EchoFilterChip
+import com.hantash.echojournal.echo.presentation.echo_list.model.TrackSizeInfo
 import com.hantash.echojournal.echo.presentation.model.MoodUi
 
 // These are the actions initiated from UI into Viewmodel

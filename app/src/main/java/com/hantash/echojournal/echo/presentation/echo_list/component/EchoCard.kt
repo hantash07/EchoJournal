@@ -1,4 +1,4 @@
-package com.hantash.echojournal.echo.presentation.echo.component
+package com.hantash.echojournal.echo.presentation.echo_list.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import com.hantash.echojournal.core.presentation.designsystem.chip.HashtagChip
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
 import com.hantash.echojournal.core.presentation.util.defaultShadow
 import com.hantash.echojournal.echo.presentation.component.EchoMoodPlayer
-import com.hantash.echojournal.echo.presentation.echo.model.TrackSizeInfo
+import com.hantash.echojournal.echo.presentation.echo_list.model.TrackSizeInfo
 import com.hantash.echojournal.echo.presentation.model.EchoUi
 import com.hantash.echojournal.echo.presentation.preview.PreviewModel
 

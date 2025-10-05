@@ -9,23 +9,23 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.hantash.echojournal.echo.presentation.echo.EchoRoot
+import com.hantash.echojournal.echo.presentation.echo_list.EchoRoot
 import com.hantash.echojournal.echo.presentation.util.toCreateEchoRoute
 
 @Composable
 fun NavigationRoot(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = NavigationRoute.Echo
+        startDestination = NavigationRoute.EchoScreen
     ) {
-        composable<NavigationRoute.Echo> {
+        composable<NavigationRoute.EchoScreen> {
             EchoRoot(
                 onNavToCreateEcho = { details ->
                     navController.navigate(details.toCreateEchoRoute())
                 }
             )
         }
-        composable<NavigationRoute.CreateEcho> {
+        composable<NavigationRoute.CreateEchoScreen> {
             Box(
                 modifier = Modifier
                     .fillMaxSize(),

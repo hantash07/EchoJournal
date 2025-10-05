@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.hantash.echojournal.echo.presentation.echo.component
+package com.hantash.echojournal.echo.presentation.echo_list.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

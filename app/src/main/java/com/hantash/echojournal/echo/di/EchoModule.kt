@@ -2,7 +2,7 @@ package com.hantash.echojournal.echo.di
 
 import com.hantash.echojournal.echo.data.recoding.AndroidVoiceRecorder
 import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
-import com.hantash.echojournal.echo.presentation.echo.EchoViewModel
+import com.hantash.echojournal.echo.presentation.echo_list.EchoViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.bind

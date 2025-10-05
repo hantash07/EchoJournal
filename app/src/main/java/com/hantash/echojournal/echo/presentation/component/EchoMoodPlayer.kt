@@ -24,8 +24,8 @@ import com.hantash.echojournal.core.presentation.designsystem.theme.MoodPrimary3
 import com.hantash.echojournal.core.presentation.designsystem.theme.MoodPrimary80
 import com.hantash.echojournal.core.presentation.util.formatMMSS
 import com.hantash.echojournal.echo.presentation.model.MoodUi
-import com.hantash.echojournal.echo.presentation.echo.model.PlaybackState
-import com.hantash.echojournal.echo.presentation.echo.model.TrackSizeInfo
+import com.hantash.echojournal.echo.presentation.echo_list.model.PlaybackState
+import com.hantash.echojournal.echo.presentation.echo_list.model.TrackSizeInfo
 import kotlin.random.Random
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds

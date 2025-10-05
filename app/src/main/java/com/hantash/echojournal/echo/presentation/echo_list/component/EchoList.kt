@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package com.hantash.echojournal.echo.presentation.echo.component
+package com.hantash.echojournal.echo.presentation.echo_list.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,9 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
 import com.hantash.echojournal.core.presentation.util.UiText
-import com.hantash.echojournal.echo.presentation.echo.model.EchoDaySection
-import com.hantash.echojournal.echo.presentation.echo.model.RelativePosition
-import com.hantash.echojournal.echo.presentation.echo.model.TrackSizeInfo
+import com.hantash.echojournal.echo.presentation.echo_list.model.EchoDaySection
+import com.hantash.echojournal.echo.presentation.echo_list.model.RelativePosition
+import com.hantash.echojournal.echo.presentation.echo_list.model.TrackSizeInfo
 import com.hantash.echojournal.echo.presentation.preview.PreviewModel
 import java.time.Instant
 import java.time.ZonedDateTime

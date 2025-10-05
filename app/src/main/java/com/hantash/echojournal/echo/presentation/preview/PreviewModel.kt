@@ -1,6 +1,6 @@
 package com.hantash.echojournal.echo.presentation.preview
 
-import com.hantash.echojournal.echo.presentation.echo.model.PlaybackState
+import com.hantash.echojournal.echo.presentation.echo_list.model.PlaybackState
 import com.hantash.echojournal.echo.presentation.model.EchoUi
 import com.hantash.echojournal.echo.presentation.model.MoodUi
 import java.time.Instant

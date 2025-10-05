@@ -1,7 +1,6 @@
-package com.hantash.echojournal.echo.presentation.echo
+package com.hantash.echojournal.echo.presentation.echo_list
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,19 +19,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
 import com.hantash.echojournal.core.presentation.designsystem.theme.bgGradient
 import com.hantash.echojournal.core.presentation.util.ObserveAsEvents
-import com.hantash.echojournal.echo.presentation.echo.component.EchoEmptyBackground
-import com.hantash.echojournal.echo.presentation.echo.component.EchoFilterRow
-import com.hantash.echojournal.echo.presentation.echo.component.EchoList
-import com.hantash.echojournal.echo.presentation.echo.component.EchoQuickRecordFloatingActionButton
-import com.hantash.echojournal.echo.presentation.echo.component.EchoRecordingSheet
-import com.hantash.echojournal.echo.presentation.echo.component.EchoTopBar
-import com.hantash.echojournal.echo.presentation.echo.model.AudioCaptureMethod
-import com.hantash.echojournal.echo.presentation.echo.model.RecordingState
+import com.hantash.echojournal.echo.presentation.echo_list.component.EchoEmptyBackground
+import com.hantash.echojournal.echo.presentation.echo_list.component.EchoFilterRow
+import com.hantash.echojournal.echo.presentation.echo_list.component.EchoList
+import com.hantash.echojournal.echo.presentation.echo_list.component.EchoQuickRecordFloatingActionButton
+import com.hantash.echojournal.echo.presentation.echo_list.component.EchoRecordingSheet
+import com.hantash.echojournal.echo.presentation.echo_list.component.EchoTopBar
+import com.hantash.echojournal.echo.presentation.echo_list.model.RecordingState
 import org.koin.androidx.compose.koinViewModel
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.util.isAppInForeground

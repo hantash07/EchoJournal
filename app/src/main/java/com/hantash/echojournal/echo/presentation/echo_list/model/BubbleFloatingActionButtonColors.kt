@@ -1,4 +1,4 @@
-package com.hantash.echojournal.echo.presentation.echo.model
+package com.hantash.echojournal.echo.presentation.echo_list.model
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable

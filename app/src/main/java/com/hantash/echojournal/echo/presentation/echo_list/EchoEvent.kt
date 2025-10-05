@@ -1,4 +1,4 @@
-package com.hantash.echojournal.echo.presentation.echo
+package com.hantash.echojournal.echo.presentation.echo_list
 
 import com.hantash.echojournal.echo.domain.recording.RecordingDetail
 

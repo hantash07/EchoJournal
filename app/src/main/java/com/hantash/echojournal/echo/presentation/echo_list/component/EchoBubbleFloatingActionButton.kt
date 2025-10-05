@@ -1,4 +1,4 @@
-package com.hantash.echojournal.echo.presentation.echo.component
+package com.hantash.echojournal.echo.presentation.echo_list.component
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
@@ -19,8 +19,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.hantash.echojournal.echo.presentation.echo.model.BubbleFloatingActionButtonColors
-import com.hantash.echojournal.echo.presentation.echo.model.rememberBubbleFloatingActionButtonColors
+import com.hantash.echojournal.echo.presentation.echo_list.model.BubbleFloatingActionButtonColors
+import com.hantash.echojournal.echo.presentation.echo_list.model.rememberBubbleFloatingActionButtonColors
 
 @Composable
 fun EchoBubbleFloatingActionButton(

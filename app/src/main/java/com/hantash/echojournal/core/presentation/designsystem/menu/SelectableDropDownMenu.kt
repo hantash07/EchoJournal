@@ -126,7 +126,7 @@ fun <T> SelectableDropDownMenu( //NOTE: Explore this generic function in detail.
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = rememberRipple(),
                                     onClick = {
-                                        dropDownExtras.onClick
+                                        dropDownExtras.onClick()
                                     }
                                 ),
 //                                .clickable {

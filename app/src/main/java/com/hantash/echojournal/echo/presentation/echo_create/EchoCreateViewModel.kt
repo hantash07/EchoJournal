@@ -39,9 +39,7 @@ class EchoCreateViewModel: ViewModel() {
 
     fun onAction(action: EchoCreateAction) {
         when (action) {
-            EchoCreateAction.OnNavigateBackClick -> {}
             is EchoCreateAction.OnAddTopicTextChange -> onAddTopicTextChange(action.text)
-            EchoCreateAction.OnCancelClick -> TODO()
             EchoCreateAction.OnConfirmMood -> onConfirmMood()
             EchoCreateAction.OnDismissMoodSelector -> onDismissMoodSelector()
             EchoCreateAction.OnDismissTopicSuggestions -> onDismissTopicSuggestions()
@@ -55,6 +53,8 @@ class EchoCreateViewModel: ViewModel() {
             is EchoCreateAction.OnTitleTextChange -> TODO()
             is EchoCreateAction.OnTopicClick -> onTopicClick(action.topic)
             is EchoCreateAction.OnTrackSizeAvailable -> TODO()
+            EchoCreateAction.OnDismissConfirmLeaveDialog -> onDismissConfirmLeaveDialog()
+            EchoCreateAction.OnCancelClick, EchoCreateAction.OnNavigateBackClick, EchoCreateAction.OnGoBack -> onShowConfirmLeaveDialog()
         }
     }
 
@@ -73,6 +73,18 @@ class EchoCreateViewModel: ViewModel() {
                 ) }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun onShowConfirmLeaveDialog() {
+        _state.update { it.copy(
+            showConfirmLeaveDialog = true
+        ) }
+    }
+
+    private fun onDismissConfirmLeaveDialog() {
+        _state.update { it.copy(
+            showConfirmLeaveDialog = false
+        ) }
     }
 
     private fun onAddTopicTextChange(text: String) {

@@ -14,7 +14,7 @@ fun RecordingDetail.toCreateEchoRoute(): CreateEchoScreen {
     )
 }
 
-fun CreateEchoScreen.toRecordingDetails(): RecordingDetail {
+fun CreateEchoScreen.toRecordingDetail(): RecordingDetail {
     return RecordingDetail(
         duration = this.duration.milliseconds,
         amplitudes = this.amplitudes.split(";").map { it.toFloat() },

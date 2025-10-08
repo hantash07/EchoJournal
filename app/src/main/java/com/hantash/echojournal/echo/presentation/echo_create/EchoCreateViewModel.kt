@@ -2,11 +2,17 @@
 
 package com.hantash.echojournal.echo.presentation.echo_create
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.hantash.echojournal.app.navigation.NavigationRoute
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable.Companion.asUnselectedItems
+import com.hantash.echojournal.echo.domain.recording.RecordingStorage
 import com.hantash.echojournal.echo.presentation.model.MoodUi
+import com.hantash.echojournal.echo.presentation.util.toRecordingDetail
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
@@ -15,12 +21,19 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlin.text.contains
+import kotlinx.coroutines.launch
 
-class EchoCreateViewModel: ViewModel() {
+class EchoCreateViewModel(
+    private val savedStateHandle: SavedStateHandle,
+    private val recordingStorage: RecordingStorage
+): ViewModel() {
     private var hasLoadedInitialData = false
+
+    private val route = savedStateHandle.toRoute<NavigationRoute.CreateEchoScreen>()
+    private val recordingDetail = route.toRecordingDetail()
 
     private val _state = MutableStateFlow(EchoCreateState())
     val state = _state
@@ -37,6 +50,9 @@ class EchoCreateViewModel: ViewModel() {
             initialValue = EchoCreateState()
         )
 
+    private val eventChannel = Channel<EchoCreateEvent>()
+    val events = eventChannel.receiveAsFlow()
+
     fun onAction(action: EchoCreateAction) {
         when (action) {
             is EchoCreateAction.OnAddTopicTextChange -> onAddTopicTextChange(action.text)
@@ -44,15 +60,15 @@ class EchoCreateViewModel: ViewModel() {
             EchoCreateAction.OnDismissMoodSelector -> onDismissMoodSelector()
             EchoCreateAction.OnDismissTopicSuggestions -> onDismissTopicSuggestions()
             is EchoCreateAction.OnMoodClick -> onMoodClick(action.moodUi)
-            is EchoCreateAction.OnNoteTextChange -> TODO()
-            EchoCreateAction.OnPauseAudioClick -> TODO()
-            EchoCreateAction.OnPlayAudioClick -> TODO()
+            is EchoCreateAction.OnNoteTextChange -> {}
+            EchoCreateAction.OnPauseAudioClick -> {}
+            EchoCreateAction.OnPlayAudioClick -> {}
             is EchoCreateAction.OnRemoveTopicClick -> onRemoveTopicClick(action.topic)
-            EchoCreateAction.OnSaveClick -> TODO()
+            EchoCreateAction.OnSaveClick -> onSaveClick()
             EchoCreateAction.OnSelectMoodClick -> onSelectMoodClick()
-            is EchoCreateAction.OnTitleTextChange -> TODO()
+            is EchoCreateAction.OnTitleTextChange -> onTitleTextChange(action.text)
             is EchoCreateAction.OnTopicClick -> onTopicClick(action.topic)
-            is EchoCreateAction.OnTrackSizeAvailable -> TODO()
+            is EchoCreateAction.OnTrackSizeAvailable -> {}
             EchoCreateAction.OnDismissConfirmLeaveDialog -> onDismissConfirmLeaveDialog()
             EchoCreateAction.OnCancelClick, EchoCreateAction.OnNavigateBackClick, EchoCreateAction.OnGoBack -> onShowConfirmLeaveDialog()
         }
@@ -73,6 +89,30 @@ class EchoCreateViewModel: ViewModel() {
                 ) }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun onSaveClick() {
+        if(recordingDetail.filePath == null) {
+            return
+        }
+
+        viewModelScope.launch {
+            val savedFilePath = recordingStorage.savePersistently(
+                tempFilePath = recordingDetail.filePath
+            )
+            if(savedFilePath == null) {
+                eventChannel.send(EchoCreateEvent.FailedToSaveFile)
+                return@launch
+            }
+
+            // TODO: Save File's Path Into Local DB
+        }
+    }
+
+    private fun onTitleTextChange(text: String) {
+        _state.update { it.copy(
+            titleText = text
+        ) }
     }
 
     private fun onShowConfirmLeaveDialog() {

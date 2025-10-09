@@ -10,6 +10,7 @@ data class EchoUi(
     val title: String,
     val note: String?,
     val moodUi: MoodUi,
+    val audioFilePath: String,
     val topics: List<String>,
     val amplitudes: List<Float>,
     val playbackState: PlaybackState = PlaybackState.STOPPED,

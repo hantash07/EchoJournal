@@ -11,6 +11,7 @@ import com.hantash.echojournal.echo.presentation.echo_list.model.EchoFilterChip
 import com.hantash.echojournal.echo.presentation.echo_list.model.MoodChipContent
 import com.hantash.echojournal.echo.presentation.echo_list.model.RecordingState
 import com.hantash.echojournal.echo.presentation.model.MoodUi
+import com.plcoding.echojournal.echos.domain.audio.AudioPlayer
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,10 +26,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class EchoViewModel(
-    private val voiceRecorder: VoiceRecorder
+    private val voiceRecorder: VoiceRecorder,
+    private val audioPlayer: AudioPlayer,
 ): ViewModel() {
 
     companion object {
@@ -55,6 +58,7 @@ class EchoViewModel(
     private val _eventChannel = Channel<EchoEvent>()
     val events = _eventChannel.receiveAsFlow()
 
+    private val playingEchoId = MutableStateFlow<Int?>(null)
     private val selectedMoodFilters = MutableStateFlow<List<MoodUi>>(emptyList())
     private val selectedTopicFilters = MutableStateFlow<List<String>>(emptyList())
 
@@ -124,8 +128,8 @@ class EchoViewModel(
                 }
             }
 
-            EchoAction.OnPauseAudioClick -> {}
-            is EchoAction.OnPlayEchoClick -> {}
+            EchoAction.OnPauseAudioClick -> audioPlayer.pause()
+            is EchoAction.OnPlayEchoClick -> onPlayEchoClick(action.echoId)
             is EchoAction.OnTrackSizeAvailable -> {}
 
             EchoAction.OnCancelRecording -> cancelRecording()
@@ -133,6 +137,39 @@ class EchoViewModel(
             EchoAction.OnCompleteRecording -> stopRecording()
             EchoAction.OnResumeRecordingClick -> resumeRecording()
         }
+    }
+
+    private fun onPlayEchoClick(echoId: Int) {
+        val selectedEcho = state.value.echos.values.flatten().first { it.id == echoId }
+        val activeTrack = audioPlayer.activeTrack.value
+        val isNewEcho = playingEchoId.value != echoId
+        val isSameEchoIsPlayingFromBeginning = echoId == playingEchoId.value && activeTrack != null
+                && activeTrack.durationPlayed == Duration.ZERO
+
+        when {
+            isNewEcho || isSameEchoIsPlayingFromBeginning -> {
+                playingEchoId.update { echoId }
+                audioPlayer.stop()
+                audioPlayer.play(
+                    filePath = selectedEcho.audioFilePath,
+                    onComplete = ::completePlayback
+                )
+            }
+            else -> audioPlayer.resume()
+        }
+    }
+
+    private fun completePlayback() {
+        _state.update { it.copy(
+            echos = it.echos.mapValues { (_, echos) ->
+                echos.map { echo ->
+                    echo.copy(
+                        playbackCurrentDuration = Duration.ZERO
+                    )
+                }
+            }
+        ) }
+        playingEchoId.update { null }
     }
 
     private fun toggleMoodFilter(moodUi: MoodUi) {

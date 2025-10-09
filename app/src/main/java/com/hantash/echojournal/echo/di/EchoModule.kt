@@ -6,6 +6,8 @@ import com.hantash.echojournal.echo.domain.recording.RecordingStorage
 import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
 import com.hantash.echojournal.echo.presentation.echo_create.EchoCreateViewModel
 import com.hantash.echojournal.echo.presentation.echo_list.EchoViewModel
+import com.plcoding.echojournal.echos.data.audio.AndroidAudioPlayer
+import com.plcoding.echojournal.echos.domain.audio.AudioPlayer
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -21,6 +23,7 @@ val echoModule = module {
 //    } bind VoiceRecorder::class
     singleOf(::AndroidVoiceRecorder) bind VoiceRecorder::class
     singleOf(::InternalRecordingStorage) bind RecordingStorage::class
+    singleOf(::AndroidAudioPlayer) bind AudioPlayer::class
 
     viewModelOf(::EchoViewModel)
     viewModelOf(::EchoCreateViewModel)

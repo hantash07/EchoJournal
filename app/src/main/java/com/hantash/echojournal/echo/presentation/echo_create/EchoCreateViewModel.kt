@@ -45,7 +45,15 @@ class EchoCreateViewModel(
     private val recordingDetail = route.toRecordingDetail()
 
     private val _state = MutableStateFlow(EchoCreateState(
-        playbackTotalDuration = recordingDetail.duration
+        playbackTotalDuration = recordingDetail.duration,
+        titleText = savedStateHandle["titleText"] ?: "",
+        noteText = savedStateHandle["noteText"] ?: "",
+        topics = savedStateHandle.get<String>("topics")?.split(",") ?: emptyList(),
+        mood = savedStateHandle.get<String>("mood")?.let {
+            MoodUi.valueOf(it)
+        },
+        showMoodSelector = savedStateHandle.get<String>("mood") == null,
+        canSaveEcho = savedStateHandle.get<Boolean>("canSaveEcho") == true
     ))
     val state = _state
         .onStart {
@@ -54,6 +62,14 @@ class EchoCreateViewModel(
                 observeAddTopicTextChange()
                 hasLoadedInitialData = true
             }
+        }
+        // By doing this we can save the data and restore it during process kill when app is in background
+        .onEach { state ->
+            savedStateHandle["titleText"] = state.titleText
+            savedStateHandle["noteText"] = state.noteText
+            savedStateHandle["topics"] = state.topics.joinToString(",")
+            savedStateHandle["mood"] = state.mood?.name
+            savedStateHandle["canSaveEcho"] = state.canSaveEcho
         }
         .stateIn(
             scope = viewModelScope,
@@ -73,7 +89,7 @@ class EchoCreateViewModel(
             EchoCreateAction.OnDismissMoodSelector -> onDismissMoodSelector()
             EchoCreateAction.OnDismissTopicSuggestions -> onDismissTopicSuggestions()
             is EchoCreateAction.OnMoodClick -> onMoodClick(action.moodUi)
-            is EchoCreateAction.OnNoteTextChange -> {}
+            is EchoCreateAction.OnNoteTextChange -> onNoteTextChange(action.text)
             EchoCreateAction.OnPauseAudioClick -> audioPlayer.pause()
             EchoCreateAction.OnPlayAudioClick -> onPlayAudioClick()
             is EchoCreateAction.OnRemoveTopicClick -> onRemoveTopicClick(action.topic)
@@ -168,7 +184,14 @@ class EchoCreateViewModel(
 
     private fun onTitleTextChange(text: String) {
         _state.update { it.copy(
-            titleText = text
+            titleText = text,
+            canSaveEcho = text.isNotBlank() && it.mood != null
+        ) }
+    }
+
+    private fun onNoteTextChange(text: String) {
+        _state.update { it.copy(
+            noteText = text
         ) }
     }
 

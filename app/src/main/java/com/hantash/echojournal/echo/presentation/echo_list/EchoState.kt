@@ -2,7 +2,6 @@ package com.hantash.echojournal.echo.presentation.echo_list
 
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable
-import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable.Companion.asUnselectedItems
 import com.hantash.echojournal.core.presentation.util.UiText
 import com.hantash.echojournal.echo.presentation.echo_list.model.AudioCaptureMethod
 import com.hantash.echojournal.echo.presentation.echo_list.model.EchoDaySection
@@ -20,9 +19,9 @@ data class EchoState(
     val hasEchoRecorded: Boolean = false,
     val hasActiveTopicFilters: Boolean = false,
     val hasActiveMoodFilters: Boolean = false,
-    val isLoadingData: Boolean = false,
+    val isLoadingData: Boolean = true,
     val moods: List<Selectable<MoodUi>> = emptyList(),
-    val topics: List<Selectable<String>> = listOf("Love", "Happy", "Work").asUnselectedItems(),
+    val topics: List<Selectable<String>> = emptyList(),
     val moodChipContent: MoodChipContent = MoodChipContent(),
     val topicChipTitle: UiText = UiText.StringResource(R.string.add_topic),
     val selectedEchoFilterChip: EchoFilterChip? = null,

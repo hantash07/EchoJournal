@@ -86,6 +86,10 @@ fun EchoCreateRoot(
                 ).show()
                 onConfirmLeave()
             }
+
+            EchoCreateEvent.EchoSuccessfullySaved -> {
+                onConfirmLeave()
+            }
         }
     }
 

@@ -8,6 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.hantash.echojournal.app.navigation.NavigationRoute
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable.Companion.asUnselectedItems
+import com.hantash.echojournal.echo.domain.echo.Echo
+import com.hantash.echojournal.echo.domain.echo.EchoDataSource
+import com.hantash.echojournal.echo.domain.echo.Mood
 import com.hantash.echojournal.echo.domain.recording.RecordingStorage
 import com.hantash.echojournal.echo.presentation.echo_list.model.PlaybackState
 import com.hantash.echojournal.echo.presentation.echo_list.model.TrackSizeInfo
@@ -32,12 +35,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
 import kotlin.time.Duration
 
 class EchoCreateViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val recordingStorage: RecordingStorage,
-    private val audioPlayer: AudioPlayer
+    private val audioPlayer: AudioPlayer,
+    private val echoDataSource: EchoDataSource
 ): ViewModel() {
     private var hasLoadedInitialData = false
 
@@ -165,7 +170,7 @@ class EchoCreateViewModel(
     }
 
     private fun onSaveClick() {
-        if(recordingDetail.filePath == null) {
+        if(recordingDetail.filePath == null || !state.value.canSaveEcho) {
             return
         }
 
@@ -178,7 +183,22 @@ class EchoCreateViewModel(
                 return@launch
             }
 
-            // TODO: Save File's Path Into Local DB
+            val currentState = _state.value
+            val echo = Echo(
+                mood = currentState.mood?.let {
+                    Mood.valueOf(it.name)
+                } ?: throw IllegalStateException("Mood must be set before saving echo."),
+                title = currentState.titleText.trim(),
+                note = currentState.noteText.ifBlank { null },
+                topics = currentState.topics,
+                audioFilePath = savedFilePath,
+                audioPlaybackLength = currentState.playbackTotalDuration,
+                audioAmplitudes = recordingDetail.amplitudes,
+                recordedAt = Instant.now()
+            )
+
+            echoDataSource.insertEcho(echo)
+            eventChannel.send(EchoCreateEvent.EchoSuccessfullySaved)
         }
     }
 

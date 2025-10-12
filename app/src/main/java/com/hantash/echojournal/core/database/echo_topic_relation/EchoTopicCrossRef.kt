@@ -16,7 +16,9 @@ data class EchoTopicCrossRef(
 )
 
 data class EchoWithTopics(
-    @Embedded val echo: EchoEntity,
+    @Embedded
+    val echo: EchoEntity,
+
     @Relation(
         parentColumn = "echoId",
         entityColumn = "topic",

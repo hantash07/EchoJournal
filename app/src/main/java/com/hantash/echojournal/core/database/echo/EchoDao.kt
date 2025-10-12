@@ -29,12 +29,15 @@ interface EchoDao {
     @Insert
     suspend fun insertEcho(echoEntity: EchoEntity): Long
 
+    // This operation will distinct the data. It will not allow data duplication.
+    // It handle Insert or update logic automatically
     @Upsert
     suspend fun upsertTopic(topicEntity: TopicEntity)
 
     @Insert
     suspend fun insertEchoTopicCrossRef(crossRef: EchoTopicCrossRef)
 
+    // Transaction means a set of database queries or operations (Insert, updates, deletes) that are executed together
     @Transaction
     suspend fun insertEchoWithTopics(echoWithTopics: EchoWithTopics) {
         val echoId = insertEcho(echoWithTopics.echo)

@@ -1,7 +1,9 @@
 package com.hantash.echojournal.echo.di
 
+import com.hantash.echojournal.echo.data.echo.RoomEchoDataSource
 import com.hantash.echojournal.echo.data.recoding.AndroidVoiceRecorder
 import com.hantash.echojournal.echo.data.recoding.InternalRecordingStorage
+import com.hantash.echojournal.echo.domain.echo.EchoDataSource
 import com.hantash.echojournal.echo.domain.recording.RecordingStorage
 import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
 import com.hantash.echojournal.echo.presentation.echo_create.EchoCreateViewModel
@@ -24,6 +26,7 @@ val echoModule = module {
     singleOf(::AndroidVoiceRecorder) bind VoiceRecorder::class
     singleOf(::InternalRecordingStorage) bind RecordingStorage::class
     singleOf(::AndroidAudioPlayer) bind AudioPlayer::class
+    singleOf(::RoomEchoDataSource) bind EchoDataSource::class
 
     viewModelOf(::EchoViewModel)
     viewModelOf(::EchoCreateViewModel)

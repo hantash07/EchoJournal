@@ -5,18 +5,28 @@ import androidx.lifecycle.viewModelScope
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.menu.Selectable
 import com.hantash.echojournal.core.presentation.util.UiText
+import com.hantash.echojournal.echo.domain.echo.Echo
+import com.hantash.echojournal.echo.domain.echo.EchoDataSource
 import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
 import com.hantash.echojournal.echo.presentation.echo_list.model.AudioCaptureMethod
 import com.hantash.echojournal.echo.presentation.echo_list.model.EchoFilterChip
 import com.hantash.echojournal.echo.presentation.echo_list.model.MoodChipContent
+import com.hantash.echojournal.echo.presentation.echo_list.model.PlaybackState
 import com.hantash.echojournal.echo.presentation.echo_list.model.RecordingState
+import com.hantash.echojournal.echo.presentation.echo_list.model.TrackSizeInfo
+import com.hantash.echojournal.echo.presentation.model.EchoUi
 import com.hantash.echojournal.echo.presentation.model.MoodUi
+import com.hantash.echojournal.echo.presentation.util.AmplitudeNormalizer
+import com.hantash.echojournal.echo.presentation.util.toEchoUi
 import com.plcoding.echojournal.echos.domain.audio.AudioPlayer
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -26,12 +36,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class EchoViewModel(
     private val voiceRecorder: VoiceRecorder,
     private val audioPlayer: AudioPlayer,
+    private val echoDataSource: EchoDataSource
 ): ViewModel() {
 
     companion object {
@@ -46,6 +60,7 @@ class EchoViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 observeFilters() //NOTE: Not a better approach to load initial data. RND on recommended approach.
+                observeEchos()
                 hasLoadedInitialData = true
             }
         }
@@ -61,6 +76,32 @@ class EchoViewModel(
     private val playingEchoId = MutableStateFlow<Int?>(null)
     private val selectedMoodFilters = MutableStateFlow<List<MoodUi>>(emptyList())
     private val selectedTopicFilters = MutableStateFlow<List<String>>(emptyList())
+    private val audioTrackSizeInfo = MutableStateFlow<TrackSizeInfo?>(null)
+
+    private val filteredEchos = echoDataSource
+        .observeEchos()
+        .filterByMoodAndTopics()
+        .onEach { echos ->
+            _state.update { it.copy(
+                hasEchoRecorded = echos.isNotEmpty(),
+                isLoadingData = false
+            ) }
+        }
+        .combine(audioTrackSizeInfo) { echos, trackSizeInfo ->
+            if(trackSizeInfo != null) {
+                echos.map { echo ->
+                    echo.copy(
+                        audioAmplitudes = AmplitudeNormalizer.normalize(
+                            sourceAmplitudes = echo.audioAmplitudes,
+                            trackWidth = trackSizeInfo.trackWidth,
+                            barWidth = trackSizeInfo.barWidth,
+                            spacing = trackSizeInfo.spacing
+                        )
+                    )
+                }
+            } else echos
+        }
+        .flowOn(Dispatchers.Default)
 
     fun onAction(action: EchoAction) {
         when (action) {
@@ -130,13 +171,44 @@ class EchoViewModel(
 
             EchoAction.OnPauseAudioClick -> audioPlayer.pause()
             is EchoAction.OnPlayEchoClick -> onPlayEchoClick(action.echoId)
-            is EchoAction.OnTrackSizeAvailable -> {}
+            is EchoAction.OnTrackSizeAvailable -> {
+                audioTrackSizeInfo.update { action.trackSizeInfo }
+            }
 
             EchoAction.OnCancelRecording -> cancelRecording()
             EchoAction.OnPauseRecordingClick -> pauseRecording()
             EchoAction.OnCompleteRecording -> stopRecording()
             EchoAction.OnResumeRecordingClick -> resumeRecording()
         }
+    }
+
+    private fun observeEchos() {
+        combine(
+            filteredEchos,
+            playingEchoId,
+            audioPlayer.activeTrack
+        ) { echos, playingEchoId, activeTrack ->
+            if(playingEchoId == null || activeTrack == null) {
+                return@combine echos.map { it.toEchoUi() }
+            }
+
+            echos.map { echo ->
+                if(echo.id == playingEchoId) {
+                    echo.toEchoUi(
+                        currentPlaybackDuration = activeTrack.durationPlayed,
+                        playbackState = if(activeTrack.isPlaying) PlaybackState.PLAYING else PlaybackState.PAUSED
+                    )
+                } else echo.toEchoUi()
+            }
+        }
+            .groupByRelativeDate()
+            .onEach { groupedEchos ->
+                _state.update { it.copy(
+                    echos = groupedEchos
+                ) }
+            }
+            .flowOn(Dispatchers.Default)
+            .launchIn(viewModelScope)
     }
 
     private fun onPlayEchoClick(echoId: Int) {
@@ -194,16 +266,17 @@ class EchoViewModel(
 
     private fun observeFilters() {
         combine(
+            echoDataSource.observeTopics(),
             selectedTopicFilters,
             selectedMoodFilters
-        ) { selectedTopics, selectedMoods ->
+        ) { allTopics, selectedTopics, selectedMoods ->
             _state.update { it.copy(
                 topicChipTitle = selectedTopics.deriveTopicsToText(),
                 hasActiveTopicFilters = selectedTopics.isNotEmpty(),
-                topics = it.topics.map { selectableTopic ->
+                topics = allTopics.map { topic ->
                     Selectable(
-                        item = selectableTopic.item,
-                        selected = selectedTopics.contains(selectableTopic.item)
+                        item = topic,
+                        selected = selectedTopics.contains(topic)
                     )
                 },
                 moodChipContent = selectedMoods.asMoodChipContent(),
@@ -324,6 +397,52 @@ class EchoViewModel(
                 _eventChannel.send(EchoEvent.RecordingTooShort)
             } else {
                 _eventChannel.send(EchoEvent.OnDoneRecording(recordingDetail))
+            }
+        }
+    }
+
+    private fun Flow<List<EchoUi>>.groupByRelativeDate(): Flow<Map<UiText, List<EchoUi>>> {
+        val formatter = DateTimeFormatter.ofPattern("dd MMM")
+        val today = LocalDate.now()
+        return map { echos ->
+            echos
+                .groupBy { echo ->
+                    LocalDate.ofInstant(
+                        echo.recordedAt,
+                        ZoneId.systemDefault()
+                    )
+                }
+                .mapValues { (_, echos) ->
+                    echos.sortedByDescending { it.recordedAt }
+                }
+                .toSortedMap(compareByDescending { it })
+                .mapKeys { (date, _) ->
+                    when(date) {
+                        today -> UiText.StringResource(R.string.today)
+                        today.minusDays(1) -> UiText.StringResource(R.string.yesterday)
+                        else -> UiText.Dynamic(date.format(formatter))
+                    }
+                }
+        }
+    }
+
+    private fun Flow<List<Echo>>.filterByMoodAndTopics(): Flow<List<Echo>> {
+        return combine(
+            this,
+            selectedMoodFilters,
+            selectedTopicFilters
+        ) { echos, moodFilters, topicFilters ->
+            echos.filter { echo ->
+                val matchesMoodFilter = moodFilters
+                    .takeIf { it.isNotEmpty() }
+                    ?.any { it.name == echo.mood.name }
+                    ?: true
+                val matchesTopicFilter = topicFilters
+                    .takeIf { it.isNotEmpty() }
+                    ?.any { it in echo.topics }
+                    ?: true
+
+                matchesMoodFilter && matchesTopicFilter
             }
         }
     }

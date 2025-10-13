@@ -39,6 +39,7 @@ import timber.log.Timber
 @Composable
 fun EchoRoot(
     onNavToCreateEcho: (RecordingDetail) -> Unit,
+    onNavToSettings: () -> Unit,
     viewModel: EchoViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -81,7 +82,16 @@ fun EchoRoot(
         }
     }
 
-    EchoScreen(state = state, onAction = viewModel::onAction) //NOTE: What does this mean viewModel::onAction
+    EchoScreen(
+        state = state,
+        onAction = { action ->
+            when(action) {
+                is EchoAction.OnSettingsClick -> onNavToSettings()
+                else -> Unit
+            }
+            viewModel.onAction(action)
+        }
+    ) //NOTE: What does this mean viewModel::onAction
 }
 
 @Composable

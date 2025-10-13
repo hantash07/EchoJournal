@@ -73,6 +73,7 @@ class EchoViewModel(
     private val _eventChannel = Channel<EchoEvent>()
     val events = _eventChannel.receiveAsFlow()
 
+    // NOTE: Why are not these defined in EchoState class?
     private val playingEchoId = MutableStateFlow<Int?>(null)
     private val selectedMoodFilters = MutableStateFlow<List<MoodUi>>(emptyList())
     private val selectedTopicFilters = MutableStateFlow<List<String>>(emptyList())

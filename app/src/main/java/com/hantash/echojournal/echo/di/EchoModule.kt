@@ -8,6 +8,7 @@ import com.hantash.echojournal.echo.domain.recording.RecordingStorage
 import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
 import com.hantash.echojournal.echo.presentation.echo_create.EchoCreateViewModel
 import com.hantash.echojournal.echo.presentation.echo_list.EchoViewModel
+import com.hantash.echojournal.echo.presentation.settings.SettingsViewModel
 import com.plcoding.echojournal.echos.data.audio.AndroidAudioPlayer
 import com.plcoding.echojournal.echos.domain.audio.AudioPlayer
 import org.koin.android.ext.koin.androidApplication
@@ -30,4 +31,5 @@ val echoModule = module {
 
     viewModelOf(::EchoViewModel)
     viewModelOf(::EchoCreateViewModel)
+    viewModelOf(::SettingsViewModel)
 }

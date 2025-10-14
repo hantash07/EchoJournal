@@ -95,7 +95,7 @@ fun EchoCreateRoot(
 
     EchoCreateScreen(
         state = state,
-        onAction = viewModel::onAction,
+        onAction = viewModel::onAction, //NOTE: What does this mean viewModel::onAction
         onConfirmLeave = onConfirmLeave
     )
 }

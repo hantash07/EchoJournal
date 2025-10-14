@@ -91,7 +91,7 @@ fun EchoRoot(
             }
             viewModel.onAction(action)
         }
-    ) //NOTE: What does this mean viewModel::onAction
+    )
 }
 
 @Composable

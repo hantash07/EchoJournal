@@ -3,9 +3,11 @@ package com.hantash.echojournal.echo.di
 import com.hantash.echojournal.echo.data.echo.RoomEchoDataSource
 import com.hantash.echojournal.echo.data.recoding.AndroidVoiceRecorder
 import com.hantash.echojournal.echo.data.recoding.InternalRecordingStorage
+import com.hantash.echojournal.echo.data.settings.DataStoreSettings
 import com.hantash.echojournal.echo.domain.echo.EchoDataSource
 import com.hantash.echojournal.echo.domain.recording.RecordingStorage
 import com.hantash.echojournal.echo.domain.recording.VoiceRecorder
+import com.hantash.echojournal.echo.domain.settings.SettingsPreferences
 import com.hantash.echojournal.echo.presentation.echo_create.EchoCreateViewModel
 import com.hantash.echojournal.echo.presentation.echo_list.EchoViewModel
 import com.hantash.echojournal.echo.presentation.settings.SettingsViewModel
@@ -28,6 +30,7 @@ val echoModule = module {
     singleOf(::InternalRecordingStorage) bind RecordingStorage::class
     singleOf(::AndroidAudioPlayer) bind AudioPlayer::class
     singleOf(::RoomEchoDataSource) bind EchoDataSource::class
+    singleOf(::DataStoreSettings) bind SettingsPreferences::class
 
     viewModelOf(::EchoViewModel)
     viewModelOf(::EchoCreateViewModel)

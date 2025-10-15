@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.button.PrimaryButton
 import com.hantash.echojournal.core.presentation.designsystem.button.SecondaryButton
+import com.hantash.echojournal.echo.presentation.component.MoodSelectorRow
 import com.hantash.echojournal.echo.presentation.model.MoodUi
 
 @Composable
@@ -57,20 +58,10 @@ fun SelectMoodSheet(
                 style = MaterialTheme.typography.titleMedium
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                allMoods.forEach { mood ->
-                    MoodItem(
-                        selected = mood == selectedMood,
-                        mood = mood,
-                        onClick = { onMoodClick(mood) },
-                    )
-                }
-            }
+            MoodSelectorRow(
+                selectedMood = selectedMood,
+                onMoodClick = onMoodClick
+            )
 
             Row(
                 modifier = Modifier
@@ -95,46 +86,5 @@ fun SelectMoodSheet(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun MoodItem(
-    selected: Boolean,
-    mood: MoodUi,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .width(64.dp)
-            .clickable(
-                indication = null,
-                interactionSource = null,
-                onClick = onClick
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Image(
-            imageVector = if(selected) {
-                ImageVector.vectorResource(mood.iconSet.fill)
-            } else {
-                ImageVector.vectorResource(mood.iconSet.outline)
-            },
-            contentDescription = mood.title.asString(),
-            modifier = Modifier
-                .height(40.dp),
-            contentScale = ContentScale.FillHeight
-        )
-        Text(
-            text = mood.title.asString(),
-            style = MaterialTheme.typography.labelMedium,
-            color = if(selected) {
-                MaterialTheme.colorScheme.onSurface
-            } else {
-                MaterialTheme.colorScheme.outline
-            }
-        )
     }
 }

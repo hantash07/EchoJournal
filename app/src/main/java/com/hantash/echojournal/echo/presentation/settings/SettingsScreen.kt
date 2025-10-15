@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
 import com.hantash.echojournal.core.presentation.designsystem.theme.bgGradient
+import com.hantash.echojournal.echo.presentation.settings.component.MoodCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -93,7 +94,10 @@ fun SettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
+            MoodCard(
+                selectedMood = state.selectedMood,
+                onMoodClick = { onAction(SettingsAction.OnMoodClick(it)) }
+            )
         }
     }
 }

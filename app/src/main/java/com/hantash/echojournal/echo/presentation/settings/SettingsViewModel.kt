@@ -24,7 +24,7 @@ class SettingsViewModel(
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                /** Load initial data here **/
+                observeSettings()
                 hasLoadedInitialData = true
             }
         }

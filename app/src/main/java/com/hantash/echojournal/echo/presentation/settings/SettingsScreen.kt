@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -29,7 +30,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hantash.echojournal.R
 import com.hantash.echojournal.core.presentation.designsystem.theme.EchoJournalTheme
 import com.hantash.echojournal.core.presentation.designsystem.theme.bgGradient
+import com.hantash.echojournal.core.presentation.util.defaultShadow
+import com.hantash.echojournal.echo.presentation.model.MoodUi
 import com.hantash.echojournal.echo.presentation.settings.component.MoodCard
+import com.hantash.echojournal.echo.presentation.settings.component.TopicCard
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -42,7 +46,7 @@ fun SettingsRoot(
     SettingsScreen(
         state = state,
         onAction = { action ->
-            when(action) {
+            when (action) {
                 is SettingsAction.OnBackClick -> onGoBack()
                 else -> Unit
             }
@@ -98,6 +102,32 @@ fun SettingsScreen(
                 selectedMood = state.selectedMood,
                 onMoodClick = { onAction(SettingsAction.OnMoodClick(it)) }
             )
+
+            TopicCard(
+                modifier = Modifier
+                    .defaultShadow(shape = RoundedCornerShape(8.dp)),
+                searchText = state.searchText,
+                topics = state.topics,
+                topicSuggestions = state.suggestedTopics,
+                showCreateTopicOption = state.showCreateTopicOption,
+                showSuggestionsDropDown = state.isTopicSuggestionsVisible,
+                canInputText = state.isTopicTextInputVisible,
+                onSearchTextChange = {
+                    onAction(SettingsAction.OnSearchTextChange(it))
+                },
+                onToggleCanInputText = {
+                    onAction(SettingsAction.OnAddButtonClick)
+                },
+                onAddTopicClick = {
+                    onAction(SettingsAction.OnSelectTopicClick(it))
+                },
+                onRemoveTopicClick = {
+                    onAction(SettingsAction.OnRemoveTopicClick(it))
+                },
+                onDismissSuggestionsDropDown = {
+                    onAction(SettingsAction.OnDismissTopicDropDown)
+                }
+            )
         }
     }
 }
@@ -107,7 +137,9 @@ fun SettingsScreen(
 private fun Preview() {
     EchoJournalTheme {
         SettingsScreen(
-            state = SettingsState(),
+            state = SettingsState(
+                selectedMood = MoodUi.PEACEFUL
+            ),
             onAction = {}
         )
     }

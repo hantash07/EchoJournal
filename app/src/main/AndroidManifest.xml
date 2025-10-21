@@ -18,14 +18,34 @@
         <activity
             android:name=".app.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.EchoJournal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="com.hantash.CREATE_ECHO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="https"
+                    android:host="echojournal.com"
+                    android:path="/echos" />
+            </intent-filter>
         </activity>
+
+        <receiver android:name=".app.widget.RecordEchoWidgetReceiver"
+            android:label="@string/create_new_entry_widget"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/record_echo_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

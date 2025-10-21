@@ -59,4 +59,6 @@
     <string name="error_couldnt_save_file">Oops, saving the file failed.</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="record_new_echo">Record new echo</string>
+    <string name="record_a_new_echo">Record a new echo with a single tap</string>
 </resources>

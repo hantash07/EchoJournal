@@ -4,7 +4,9 @@ import kotlinx.serialization.Serializable
 
 sealed interface NavigationRoute {
     @Serializable
-    data object EchoScreen: NavigationRoute
+    data class EchoScreen(
+        val startRecording: Boolean
+    ): NavigationRoute
 
     @Serializable
     data class CreateEchoScreen(

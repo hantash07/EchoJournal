@@ -11,8 +11,9 @@ It seamlessly blends **audio journaling** with **written reflections**, letting 
 <p align="center">
   <img src="readme-assets/gif/demo-echo-journal.gif" width="200">
   <img src="readme-assets/screenshots/01-home-screen.jpeg" width="200">
-  <img src="readme-assets/screenshots/02-record-screen.jpeg" width="200">
-  <img src="readme-assets/screenshots/03-record-voice.jpeg" width="200">
+  <img src="readme-assets/screenshots/02-standard-record.jpeg" width="200">
+  <img src="readme-assets/screenshots/03-quick-record.jpeg" width="200">
+  <img src="readme-assets/screenshots/04-record-screen.jpeg" width="200">
   <img src="readme-assets/screenshots/04-settings-screen.jpeg" width="200">
 </p>
 

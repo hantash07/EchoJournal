@@ -8,9 +8,9 @@ It seamlessly blends **audio journaling** with **written reflections**, letting 
 
 ## 🖼️ App Screenshots
 
-| Home Screen | Record Note | Settings |
-|--------------|------------|--------------|
-| ![Home Screen](https://via.placeholder.com/250x500.png?text=Home+Screen) | ![Edit Note](https://via.placeholder.com/250x500.png?text=Edit+Note) | ![Manual Sync](https://via.placeholder.com/250x500.png?text=Sync+Screen) |
+| Home Screen  | Record Note   | Record Voice   | Settings  |
+|--------------|---------------|----------------|-----------|
+| ![Home Screen](readme-assets/screenshots/01-home-screen.jpeg) | ![Edit Note](readme-assets/screenshots/02-record-screen.jpeg) | ![Record Voice](readme-assets/screenshots/03-record-voice.jpeg) | ![Settings](readme-assets/screenshots/04-settings-screen.jpeg) |
 
 ---
 

@@ -67,3 +67,21 @@ Key areas of learning include:
 | **Build Tool** | Gradle |
 
 ---
+
+## 🛂 Contribute
+
+Contributions to Echo Journal are always welcome and appreciated! 💡
+Whether it's a bug fix, new feature, performance improvement, or even a typo correction — you're more than welcome to jump in 🚀
+
+---
+
+## 💼 Hire Me
+
+I’m open to exciting opportunities in **Android Development**, especially projects involving **Kotlin**, **Jetpack Compose**, **Jetpack Libraries**, **MVVM**, **Coroutines**, **Flow**, **Hilt**, **Koin**, **Room**, **Retrofit** and **Ktor**.
+
+If you’re looking for a passionate Android developer to collaborate or hire, feel free to reach out!
+
+📧 **Email:** [hantashnadeem@gmail.com](mailto:hantashnadeem@gmail.com)  
+🔗 **LinkedIn:** [linkedin.com/in/hantash-nadeem](https://linkedin.com/in/hantash-nadeem)
+
+---

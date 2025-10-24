@@ -6,11 +6,16 @@ It seamlessly blends **audio journaling** with **written reflections**, letting 
 
 ---
 
-## 🖼️ App Screenshots
+## 🖼️ App's Demo & Screenshots
 
-| Home Screen  | Record Note   | Record Voice   | Settings  |
-|--------------|---------------|----------------|-----------|
-| ![Home Screen](readme-assets/screenshots/01-home-screen.jpeg) | ![Edit Note](readme-assets/screenshots/02-record-screen.jpeg) | ![Record Voice](readme-assets/screenshots/03-record-voice.jpeg) | ![Settings](readme-assets/screenshots/04-settings-screen.jpeg) |
+<p align="center">
+  <img src="readme-assets/gif/demo-echo-journal.gif" width="200">
+  <img src="readme-assets/screenshots/01-home-screen.jpeg" width="200">
+  <img src="readme-assets/screenshots/02-record-screen.jpeg" width="200">
+  <img src="readme-assets/screenshots/03-record-voice.jpeg" width="200">
+  <img src="readme-assets/screenshots/04-settings-screen.jpeg" width="200">
+</p>
+
 
 ---
 
